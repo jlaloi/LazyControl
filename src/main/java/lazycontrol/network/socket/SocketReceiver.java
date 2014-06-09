@@ -1,9 +1,12 @@
 package main.java.lazycontrol.network.socket;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
@@ -31,6 +34,11 @@ public class SocketReceiver extends SocketThread {
 				String[] dimension = trame.substring(header.resolution.name().length()).split(separator);
 				image = new BufferedImage(Integer.valueOf(dimension[0]), Integer.valueOf(dimension[1]), BufferedImage.TYPE_INT_RGB);
 				Factory.getServerFrame().setOriginalResolution(Integer.valueOf(dimension[2]), Integer.valueOf(dimension[3]));
+				List<Rectangle> screenBounds = new ArrayList<Rectangle>();
+				for (int i = 4; i < dimension.length; i += 4) {
+					screenBounds.add(new Rectangle(Integer.valueOf(dimension[i]), Integer.valueOf(dimension[i + 1]), Integer.valueOf(dimension[i + 2]), Integer.valueOf(dimension[i + 3])));
+				}
+				Factory.getServerFrame().setScreenBounds(screenBounds);
 			} else if (trame.startsWith(header.rgbs.name())) {
 				ImageComparator.insertImageChange(image, trame.substring(header.rgbs.name().length()));
 				Factory.getServerFrame().setScreenCapture(new ImageIcon(image), trame.length());

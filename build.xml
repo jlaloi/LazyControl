@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="LazyControl">
+    <target name="create_run_jar">
+    	<javac srcdir="src" destdir="bin"/>
+        <jar destfile="LazyControl.jar">
+            <manifest>
+            	<attribute name="Main-Class" value="main.java.lazycontrol.Launcher"/>
+            	<attribute name="Rsrc-Main-Class" value="main.java.lazycontrol.Launcher" />
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="bin" />
+        </jar>
+    </target>
+</project>

@@ -3,6 +3,7 @@ package main.java.lazycontrol.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -10,9 +11,11 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,7 +27,7 @@ import main.java.lazycontrol.ressources.Factory;
 
 public class ClientFrame extends JFrame {
 
-	private ScreenLabel screenResolution;
+	private ScreenLabel screenLabel;
 	private int intLastSecond;
 	private int fpsCount, lastSecond, lastWidth;
 	private int originalWidth, originalHeight;
@@ -34,6 +37,7 @@ public class ClientFrame extends JFrame {
 	private TextField address, port;
 	private PasswordField password;
 	private JButton connect, disconnect;
+	private JCheckBox takeControl;
 
 	private Client client;
 	private boolean init = false;
@@ -51,6 +55,8 @@ public class ClientFrame extends JFrame {
 		password = new PasswordField();
 		connect = new JButton("Connect");
 		disconnect = new JButton("Disconnect");
+		takeControl = new JCheckBox("Take control");
+		;
 		disconnect.setEnabled(false);
 		controlPanel.add(connect);
 		controlPanel.add(new JLabel("Address: "));
@@ -61,9 +67,10 @@ public class ClientFrame extends JFrame {
 		controlPanel.add(password);
 		controlPanel.add(connect);
 		controlPanel.add(disconnect);
+		controlPanel.add(takeControl);
 
-		screenResolution = new ScreenLabel();
-		getRootPane().add(screenResolution, BorderLayout.CENTER);
+		screenLabel = new ScreenLabel();
+		getRootPane().add(screenLabel, BorderLayout.CENTER);
 
 		jProgressBar = new JProgressBar();
 		jProgressBar.setStringPainted(true);
@@ -80,7 +87,7 @@ public class ClientFrame extends JFrame {
 		addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
 				if (Factory.getClientSocketSender() != null) {
-					if (lastWidth != screenResolution.getWidth()) {
+					if (lastWidth != screenLabel.getWidth()) {
 						lastResize = Calendar.getInstance().getTimeInMillis();
 						SwingUtilities.invokeLater(new ResizeResolutionChange(lastResize));
 					}
@@ -112,10 +119,15 @@ public class ClientFrame extends JFrame {
 			public void actionPerformed(ActionEvent ae) {
 				if (client != null) {
 					client.stopClient();
-					screenResolution.setIcon(null);
+					screenLabel.setIcon(null);
 				}
 				connect.setEnabled(true);
 				disconnect.setEnabled(false);
+			}
+		});
+		takeControl.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				screenLabel.setControl(takeControl.isSelected());
 			}
 		});
 	}
@@ -134,7 +146,7 @@ public class ClientFrame extends JFrame {
 			init = true;
 		}
 
-		screenResolution.setIcon(image);
+		screenLabel.setIcon(image);
 
 		if (jProgressBar.getMaximum() < length) {
 			jProgressBar.setMaximum(length);
@@ -146,12 +158,16 @@ public class ClientFrame extends JFrame {
 	public void setOriginalResolution(int originalWidth, int originalHeight) {
 		this.originalWidth = originalWidth;
 		this.originalHeight = originalHeight;
-		screenResolution.setOriginalResolution(originalWidth, originalHeight);
+		screenLabel.setOriginalResolution(originalWidth, originalHeight);
 	}
 
 	private void updateCaptureResolution() {
-		Factory.getClientSocketSender().changeScreenCaptureSize(screenResolution.getWidth());
-		lastWidth = screenResolution.getWidth();
+		Factory.getClientSocketSender().changeScreenCaptureSize(screenLabel.getWidth());
+		lastWidth = screenLabel.getWidth();
+	}
+
+	public void setScreenBounds(List<Rectangle> screenBounds) {
+		screenLabel.setScreenBounds(screenBounds);
 	}
 
 	class ResizeResolutionChange implements Runnable {
@@ -163,7 +179,7 @@ public class ClientFrame extends JFrame {
 		}
 
 		public void run() {
-			if (lastResize == time && lastWidth != screenResolution.getWidth()) {
+			if (lastResize == time && lastWidth != screenLabel.getWidth()) {
 				updateCaptureResolution();
 			}
 		}

@@ -31,7 +31,6 @@ public class ScreenCapture {
 			height = Math.max(height, b.height);
 			x = Math.min(x, b.x);
 			y = Math.min(y, b.y);
-			break;
 		}
 		return new Rectangle(x, y, width, height);
 	}
