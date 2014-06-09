@@ -13,18 +13,20 @@ public class Server extends Thread {
 	private String password;
 	private ServerSocket serverSocket;
 	private boolean stop = false;
+	private boolean allowControl;
 	private BufferedReader bufferedReader;
 
-	public Server(int port, String password) {
+	public Server(int port, String password, boolean allowControl) {
 		super();
 		this.port = port;
 		this.password = password;
+		this.allowControl = allowControl;
 	}
 
 	public void run() {
 		try {
 			serverSocket = new ServerSocket(port);
-			System.out.println("Listening on " + port);
+			System.out.println("Listening on " + port + ", allowControl: " + allowControl);
 			while (!stop) {
 				Socket socket = serverSocket.accept();
 				System.out.println("New socket from " + socket.getInetAddress());
@@ -32,7 +34,7 @@ public class Server extends Thread {
 				String received = bufferedReader.readLine();
 				if (received.equals(password)) {
 					System.out.println("Socket accepted");
-					Factory.initServerSocketReceiver(socket);
+					Factory.initServerSocketReceiver(socket).setAllowControl(allowControl);
 					Factory.initServerSocketSender(socket).setSendScreenCapture(true);
 				} else {
 					System.out.println("Socket closed");

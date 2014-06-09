@@ -1,5 +1,6 @@
 package main.java.lazycontrol.network.socket;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -38,7 +39,11 @@ public class SocketSender extends SocketThread {
 
 				// Resolution change
 				if (!init) {
-					trame = header.resolution.toString() + screenCapture.getWidth() + separator + screenCapture.getHeight();
+					trame = header.resolution.toString() + screenCapture.getWidth() + separator + screenCapture.getHeight() + separator;
+					trame += ScreenCapture.getScreenCaptureBound().width + separator + ScreenCapture.getScreenCaptureBound().height + separator;
+					for (Rectangle bound : ScreenCapture.getScreenBounds()) {
+						trame += bound.x + separator + bound.y + separator + bound.width + separator + bound.height + separator;
+					}
 					printWritter.println(trame);
 					printWritter.flush();
 					old = null;
@@ -126,5 +131,21 @@ public class SocketSender extends SocketThread {
 
 	public void changeScreenCaptureSize(int width) {
 		addTrame(header.screenCaptureSize.toString() + width);
+	}
+
+	public void mouseReleased(int x, int y, int button) {
+		addTrame(header.mouseReleased.toString() + x + separator + y + separator + button);
+	}
+
+	public void mousePressed(int x, int y, int button) {
+		addTrame(header.mousePressed.toString() + x + separator + y + separator + button);
+	}
+
+	public void keyReleased(int key) {
+		addTrame(header.keyReleased.toString() + key);
+	}
+
+	public void keyPressed(int key) {
+		addTrame(header.keyPressed.toString() + key);
 	}
 }

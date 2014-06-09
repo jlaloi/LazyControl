@@ -1,5 +1,6 @@
 package main.java.lazycontrol.ressources;
 
+import java.awt.Robot;
 import java.net.Socket;
 
 import main.java.lazycontrol.gui.ClientFrame;
@@ -16,11 +17,24 @@ public class Factory {
 	private static SocketReceiver serverSocketReceiver, clientSocketReceiver;
 	private static SocketSender serverSocketSender, clientSocketSender;
 
+	private static Robot robot;
+
 	public static ClientFrame getServerFrame() {
 		if (serverFrame == null) {
 			serverFrame = new ClientFrame();
 		}
 		return serverFrame;
+	}
+
+	public static Robot getRobot() {
+		if (robot == null) {
+			try {
+				robot = new Robot();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return robot;
 	}
 
 	public static SocketReceiver getServerSocketReceiver() {

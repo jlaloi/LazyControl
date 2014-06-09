@@ -8,7 +8,7 @@ public abstract class SocketThread extends Thread {
 	protected boolean stop = false;
 
 	public enum header {
-		resolution, rgbs, screenCaptureSize, mouse
+		resolution, rgbs, screenCaptureSize, mousePressed, mouseReleased, keyPressed, keyReleased;
 	};
 
 	public static final String separator = ",";

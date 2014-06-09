@@ -2,7 +2,6 @@ package main.java.lazycontrol.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,9 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import main.java.lazycontrol.network.Client;
@@ -27,9 +24,10 @@ import main.java.lazycontrol.ressources.Factory;
 
 public class ClientFrame extends JFrame {
 
-	private JLabel imageLabel;
+	private ScreenLabel screenResolution;
 	private int intLastSecond;
 	private int fpsCount, lastSecond, lastWidth;
+	private int originalWidth, originalHeight;
 	private long lastResize;
 	private JProgressBar jProgressBar;
 
@@ -64,12 +62,8 @@ public class ClientFrame extends JFrame {
 		controlPanel.add(connect);
 		controlPanel.add(disconnect);
 
-		imageLabel = new JLabel();
-		imageLabel.setPreferredSize(new Dimension(1280, 720));
-		imageLabel.setOpaque(false);
-		imageLabel.setForeground(Color.WHITE);
-		imageLabel.setHorizontalAlignment(JLabel.CENTER);
-		getRootPane().add(imageLabel, BorderLayout.CENTER);
+		screenResolution = new ScreenLabel();
+		getRootPane().add(screenResolution, BorderLayout.CENTER);
 
 		jProgressBar = new JProgressBar();
 		jProgressBar.setStringPainted(true);
@@ -86,7 +80,7 @@ public class ClientFrame extends JFrame {
 		addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
 				if (Factory.getClientSocketSender() != null) {
-					if (lastWidth != imageLabel.getWidth()) {
+					if (lastWidth != screenResolution.getWidth()) {
 						lastResize = Calendar.getInstance().getTimeInMillis();
 						SwingUtilities.invokeLater(new ResizeResolutionChange(lastResize));
 					}
@@ -118,7 +112,7 @@ public class ClientFrame extends JFrame {
 			public void actionPerformed(ActionEvent ae) {
 				if (client != null) {
 					client.stopClient();
-					imageLabel.setIcon(null);
+					screenResolution.setIcon(null);
 				}
 				connect.setEnabled(true);
 				disconnect.setEnabled(false);
@@ -130,7 +124,7 @@ public class ClientFrame extends JFrame {
 		lastSecond = Calendar.getInstance().get(Calendar.SECOND);
 		fpsCount++;
 		if (lastSecond != intLastSecond) {
-			setTitle(Factory.appName + " - " + fpsCount + " fps" + " - " + image.getIconWidth() + "x" + image.getIconHeight());
+			setTitle(Factory.appName + " - " + fpsCount + " fps" + " - " + image.getIconWidth() + "x" + image.getIconHeight() + " - (" + originalWidth + "x" + originalHeight + ")");
 			fpsCount = 0;
 			intLastSecond = lastSecond;
 		}
@@ -140,7 +134,7 @@ public class ClientFrame extends JFrame {
 			init = true;
 		}
 
-		imageLabel.setIcon(image);
+		screenResolution.setIcon(image);
 
 		if (jProgressBar.getMaximum() < length) {
 			jProgressBar.setMaximum(length);
@@ -149,23 +143,15 @@ public class ClientFrame extends JFrame {
 		jProgressBar.setString(((int) (length * 100f / jProgressBar.getMaximum())) + "%");
 	}
 
+	public void setOriginalResolution(int originalWidth, int originalHeight) {
+		this.originalWidth = originalWidth;
+		this.originalHeight = originalHeight;
+		screenResolution.setOriginalResolution(originalWidth, originalHeight);
+	}
+
 	private void updateCaptureResolution() {
-		Factory.getClientSocketSender().changeScreenCaptureSize(imageLabel.getWidth());
-		lastWidth = imageLabel.getWidth();
-	}
-
-	class TextField extends JTextField {
-		public TextField(String value) {
-			super(value);
-			setPreferredSize(new Dimension(100, getPreferredSize().height));
-		}
-	}
-
-	class PasswordField extends JPasswordField {
-		public PasswordField() {
-			super();
-			setPreferredSize(new Dimension(100, getPreferredSize().height));
-		}
+		Factory.getClientSocketSender().changeScreenCaptureSize(screenResolution.getWidth());
+		lastWidth = screenResolution.getWidth();
 	}
 
 	class ResizeResolutionChange implements Runnable {
@@ -177,7 +163,7 @@ public class ClientFrame extends JFrame {
 		}
 
 		public void run() {
-			if (lastResize == time && lastWidth != imageLabel.getWidth()) {
+			if (lastResize == time && lastWidth != screenResolution.getWidth()) {
 				updateCaptureResolution();
 			}
 		}

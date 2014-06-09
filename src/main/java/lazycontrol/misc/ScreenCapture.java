@@ -5,22 +5,13 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.lazycontrol.ressources.Factory;
+
 public class ScreenCapture {
-
-	private static Robot robot;
-
-	static {
-		try {
-			robot = new Robot();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public static List<Rectangle> getScreenBounds() {
 		List<Rectangle> result = new ArrayList<Rectangle>();
@@ -40,6 +31,7 @@ public class ScreenCapture {
 			height = Math.max(height, b.height);
 			x = Math.min(x, b.x);
 			y = Math.min(y, b.y);
+			break;
 		}
 		return new Rectangle(x, y, width, height);
 	}
@@ -49,7 +41,7 @@ public class ScreenCapture {
 	}
 
 	public static BufferedImage getScreenCapture(Rectangle bounds) {
-		return robot.createScreenCapture(bounds);
+		return Factory.getRobot().createScreenCapture(bounds);
 	}
 
 	public static BufferedImage resizeImage(BufferedImage image, int width, int height) {
