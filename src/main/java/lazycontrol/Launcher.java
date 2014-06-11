@@ -25,9 +25,8 @@ public class Launcher {
 			System.out.println("Proper Usage is:\n 1 - client/server\n 2 - port\n 3 - true/false\n 4 - password\n\nExample:\n java -Xmx256M -jar LazyControl.jar client\n java -Xmx256M -jar LazyControl.jar server 45878 true password");
 		}
 
-		// Server server = new Server(Factory.defaultPort, "123456");
-		// server.start();
-		Factory.getServerFrame();
+		// new Server(Factory.defaultPort, "123456").start();
+		// Factory.getServerFrame();
 	}
 
 }
