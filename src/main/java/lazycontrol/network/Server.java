@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import main.java.lazycontrol.network.socket.SocketSender;
 import main.java.lazycontrol.ressources.Factory;
 
 public class Server extends Thread {
@@ -15,12 +16,14 @@ public class Server extends Thread {
 	private boolean stop = false;
 	private boolean allowControl;
 	private BufferedReader bufferedReader;
+	private int interlacedPass;
 
-	public Server(int port, String password, boolean allowControl) {
+	public Server(int port, String password, boolean allowControl, int interlacedPass) {
 		super();
 		this.port = port;
 		this.password = password;
 		this.allowControl = allowControl;
+		this.interlacedPass = interlacedPass;
 	}
 
 	public void run() {
@@ -35,7 +38,9 @@ public class Server extends Thread {
 				if (received.equals(password)) {
 					System.out.println("Socket accepted");
 					Factory.initServerSocketReceiver(socket).setAllowControl(allowControl);
-					Factory.initServerSocketSender(socket).setSendScreenCapture(true);
+					SocketSender socketSender = Factory.initServerSocketSender(socket);
+					socketSender.setSendScreenCapture(true);
+					socketSender.setInterlacedPass(interlacedPass);
 				} else {
 					System.out.println("Socket closed");
 					socket.close();

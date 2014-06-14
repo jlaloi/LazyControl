@@ -13,6 +13,8 @@ import main.java.lazycontrol.misc.ScreenCapture;
 
 public class SocketSender extends SocketThread {
 
+	public int interlacedPass = 2;
+
 	private PrintWriter printWritter;
 	private BufferedImage screenCapture, old;
 	private boolean init = false;
@@ -51,17 +53,13 @@ public class SocketSender extends SocketThread {
 				}
 
 				// Send Interlaced
-				trame = ImageComparator.getImageDiffTrame(screenCapture, old, 0, 2);
-				if (trame.length() > 0) {
-					printWritter.print(header.rgbs.toString());
-					printWritter.println(trame);
-					printWritter.flush();
-				}
-				trame = ImageComparator.getImageDiffTrame(screenCapture, old, 1, 2);
-				if (trame.length() > 0) {
-					printWritter.print(header.rgbs.toString());
-					printWritter.println(trame);
-					printWritter.flush();
+				for (int i = 0; i < interlacedPass; i++) {
+					trame = ImageComparator.getImageDiffTrame(screenCapture, old, i, interlacedPass);
+					if (trame.length() > 0) {
+						printWritter.print(header.rgbs.toString());
+						printWritter.println(trame);
+						printWritter.flush();
+					}
 				}
 
 				// Flush...
@@ -148,4 +146,9 @@ public class SocketSender extends SocketThread {
 	public void keyPressed(int key) {
 		addTrame(header.keyPressed.toString() + key);
 	}
+
+	public void setInterlacedPass(int interlacedPass) {
+		this.interlacedPass = Math.max(interlacedPass, 2);
+	}
+
 }

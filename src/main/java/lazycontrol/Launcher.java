@@ -16,16 +16,17 @@ public class Launcher {
 				e.printStackTrace();
 			}
 			Factory.getServerFrame();
-		} else if (args.length >= 3 && "server".equals(args[0])) {
+		} else if (args.length >= 4 && "server".equals(args[0])) {
 			int port = Integer.valueOf(args[1]);
 			boolean allowControl = Boolean.valueOf(args[2]);
-			String password = args.length >= 4 ? args[3] : "";
-			new Server(port, password, allowControl).start();
+			String password = args[3];
+			int interlacedPass = args.length > 4 ? Integer.valueOf(args[4]) : 2;
+			new Server(port, password, allowControl, interlacedPass).start();
 		} else {
-			System.out.println("Proper Usage is:\n 1 - client/server\n 2 - port\n 3 - true/false\n 4 - password\n\nExample:\n java -Xmx256M -jar LazyControl.jar client\n java -Xmx256M -jar LazyControl.jar server 45878 true password");
+			System.out.println("Proper Usage is:\n 1 - client/server\n 2 - port\n 3 - allowControl true/false\n 4 - password\n 5 - interlacedPass\n\nExample:\n java -Xmx256M -jar LazyControl.jar client\n java -Xmx256M -jar LazyControl.jar server 45878 true password 2");
 		}
 
-		// new Server(Factory.defaultPort, "123456").start();
+		// new Server(Factory.defaultPort, "",false,2).start();
 		// Factory.getServerFrame();
 	}
 
