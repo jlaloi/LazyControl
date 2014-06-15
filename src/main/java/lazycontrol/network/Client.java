@@ -9,16 +9,18 @@ public class Client extends Thread {
 
 	private String address, password;
 	private int port;
+	private int threadSleepMs;
 
 	private Socket socket;
 
 	private PrintWriter printWriter;
 
-	public Client(String address, int port, String password) {
+	public Client(String address, int port, String password, int threadSleepMs) {
 		super();
 		this.address = address;
 		this.port = port;
 		this.password = password;
+		this.threadSleepMs = threadSleepMs;
 	}
 
 	public void run() {
@@ -27,8 +29,8 @@ public class Client extends Thread {
 			printWriter = new PrintWriter(socket.getOutputStream());
 			printWriter.println(password);
 			printWriter.flush();
-			Factory.initClientSocketReceiver(socket);
-			Factory.initClientSocketSender(socket);
+			Factory.initClientSocketReceiver(socket, threadSleepMs);
+			Factory.initClientSocketSender(socket, threadSleepMs);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

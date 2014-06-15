@@ -16,14 +16,15 @@ public class Server extends Thread {
 	private boolean stop = false;
 	private boolean allowControl;
 	private BufferedReader bufferedReader;
-	private int interlacedPass;
+	private int interlacedPass, threadSleepMs;
 
-	public Server(int port, String password, boolean allowControl, int interlacedPass) {
+	public Server(int port, String password, boolean allowControl, int interlacedPass, int threadSleepMs) {
 		super();
 		this.port = port;
 		this.password = password;
 		this.allowControl = allowControl;
 		this.interlacedPass = interlacedPass;
+		this.threadSleepMs = threadSleepMs;
 	}
 
 	public void run() {
@@ -37,8 +38,8 @@ public class Server extends Thread {
 				String received = bufferedReader.readLine();
 				if (received.equals(password)) {
 					System.out.println("Socket accepted");
-					Factory.initServerSocketReceiver(socket).setAllowControl(allowControl);
-					SocketSender socketSender = Factory.initServerSocketSender(socket);
+					Factory.initServerSocketReceiver(socket, threadSleepMs).setAllowControl(allowControl);
+					SocketSender socketSender = Factory.initServerSocketSender(socket, threadSleepMs);
 					socketSender.setSendScreenCapture(true);
 					socketSender.setInterlacedPass(interlacedPass);
 				} else {

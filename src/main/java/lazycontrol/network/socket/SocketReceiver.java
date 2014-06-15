@@ -20,8 +20,8 @@ public class SocketReceiver extends SocketThread {
 	private String trame;
 	private boolean allowControl = false;
 
-	public SocketReceiver(Socket socket) {
-		super(socket);
+	public SocketReceiver(Socket socket, int threadSleepMs) {
+		super(socket, threadSleepMs);
 	}
 
 	protected void execute() {
@@ -45,24 +45,20 @@ public class SocketReceiver extends SocketThread {
 			} else if (trame.startsWith(header.screenCaptureSize.name())) {
 				Factory.getServerSocketSender().setWidth(Integer.valueOf(trame.substring(header.screenCaptureSize.name().length())));
 			} else if (allowControl && trame.startsWith(header.mousePressed.name())) {
-				System.out.println(trame);
 				String[] param = trame.substring(header.mousePressed.name().length()).split(separator);
 				Factory.getRobot().mouseMove(Integer.valueOf(param[0]), Integer.valueOf(param[1]));
 				sleep(10);
 				Factory.getRobot().mousePress(Integer.valueOf(param[2]));
 			} else if (allowControl && trame.startsWith(header.mouseReleased.name())) {
 				String[] param = trame.substring(header.mouseReleased.name().length()).split(separator);
-				System.out.println(trame);
 				Factory.getRobot().mouseMove(Integer.valueOf(param[0]), Integer.valueOf(param[1]));
 				sleep(10);
 				Factory.getRobot().mouseRelease(Integer.valueOf(param[2]));
 			} else if (allowControl && trame.startsWith(header.keyPressed.name())) {
 				int c = Integer.valueOf(trame.substring(header.keyPressed.name().length()));
-				System.out.println("Key Pressed: " + ((char) c));
 				Factory.getRobot().keyPress(c);
 			} else if (allowControl && trame.startsWith(header.keyReleased.name())) {
 				int c = Integer.valueOf(trame.substring(header.keyReleased.name().length()));
-				System.out.println("Key Released: " + ((char) c));
 				Factory.getRobot().keyRelease(c);
 			}
 		} catch (Exception e) {

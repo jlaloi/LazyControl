@@ -8,5 +8,6 @@ class TextField extends JTextField {
 	public TextField(String value) {
 		super(value);
 		setPreferredSize(new Dimension(100, getPreferredSize().height));
+		setHorizontalAlignment(JTextField.CENTER);
 	}
 }

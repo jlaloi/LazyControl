@@ -53,26 +53,26 @@ public class Factory {
 		return clientSocketSender;
 	}
 
-	public static SocketSender initClientSocketSender(Socket socket) {
-		clientSocketSender = new SocketSender(socket);
+	public static SocketSender initClientSocketSender(Socket socket, int threadSleepMs) {
+		clientSocketSender = new SocketSender(socket, threadSleepMs);
 		clientSocketSender.start();
 		return clientSocketSender;
 	}
 
-	public static SocketSender initServerSocketSender(Socket socket) {
-		serverSocketSender = new SocketSender(socket);
+	public static SocketSender initServerSocketSender(Socket socket, int threadSleepMs) {
+		serverSocketSender = new SocketSender(socket, threadSleepMs);
 		serverSocketSender.start();
 		return serverSocketSender;
 	}
 
-	public static SocketReceiver initClientSocketReceiver(Socket socket) {
-		clientSocketReceiver = new SocketReceiver(socket);
+	public static SocketReceiver initClientSocketReceiver(Socket socket, int threadSleepMs) {
+		clientSocketReceiver = new SocketReceiver(socket, threadSleepMs);
 		clientSocketReceiver.start();
 		return clientSocketReceiver;
 	}
 
-	public static SocketReceiver initServerSocketReceiver(Socket socket) {
-		serverSocketReceiver = new SocketReceiver(socket);
+	public static SocketReceiver initServerSocketReceiver(Socket socket, int threadSleepMs) {
+		serverSocketReceiver = new SocketReceiver(socket, threadSleepMs);
 		serverSocketReceiver.start();
 		return serverSocketReceiver;
 	}

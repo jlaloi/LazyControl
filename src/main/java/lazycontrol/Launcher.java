@@ -7,26 +7,58 @@ import main.java.lazycontrol.ressources.Factory;
 
 public class Launcher {
 
+	public enum Parameter {
+		port, allowControl, password, interlacedPass, threadSleep;
+
+		public String toString() {
+			return "-" + name() + ":";
+		}
+
+		public String getValue(String arg) {
+			return arg.substring(toString().length());
+		}
+	}
+
 	public static void main(String[] args) {
 
-		if (args.length >= 1 && "client".equals(args[0])) {
+		if (args.length > 0 && "client".equals(args[0])) {
 			try {
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			Factory.getServerFrame();
-		} else if (args.length >= 4 && "server".equals(args[0])) {
-			int port = Integer.valueOf(args[1]);
-			boolean allowControl = Boolean.valueOf(args[2]);
-			String password = args[3];
-			int interlacedPass = args.length > 4 ? Integer.valueOf(args[4]) : 2;
-			new Server(port, password, allowControl, interlacedPass).start();
+		} else if (args.length > 0 && "server".equals(args[0])) {
+			int port = Factory.defaultPort;
+			boolean allowControl = false;
+			String password = "";
+			int interlacedPass = 4;
+			int threadSleep = 100;
+			for (int i = 1; i < args.length; i++) {
+				String arg = args[i];
+				if (arg.startsWith(Parameter.allowControl.toString())) {
+					allowControl = Boolean.valueOf(Parameter.allowControl.getValue(arg));
+				} else if (arg.startsWith(Parameter.port.toString())) {
+					port = Integer.valueOf(Parameter.port.getValue(arg));
+				} else if (arg.startsWith(Parameter.interlacedPass.toString())) {
+					interlacedPass = Integer.valueOf(Parameter.interlacedPass.getValue(arg));
+				} else if (arg.startsWith(Parameter.password.toString())) {
+					password = Parameter.password.getValue(arg);
+				} else if (arg.startsWith(Parameter.threadSleep.toString())) {
+					threadSleep = Integer.valueOf(Parameter.threadSleep.getValue(arg));
+				}
+			}
+			new Server(port, password, allowControl, interlacedPass, threadSleep).start();
 		} else {
-			System.out.println("Proper Usage is:\n 1 - client/server\n 2 - port\n 3 - allowControl true/false\n 4 - password\n 5 - interlacedPass\n\nExample:\n java -Xmx256M -jar LazyControl.jar client\n java -Xmx256M -jar LazyControl.jar server 45878 true password 2");
+			System.out.println("Proper Usage is:");
+			System.out.println("client/server\n" + Parameter.port + "<Port number>\n" + Parameter.allowControl + "<true/false>" + "\n" + Parameter.password + "<password>\n" + Parameter.interlacedPass + "<Number of pass>\n" + Parameter.threadSleep + "<Sleep ms>");
+			System.out.println("\nExample:");
+			System.out.println(" java -Xmx256M -jar LazyControl.jar client");
+			System.out.println(" java -Xmx256M -jar LazyControl.jar server");
+			System.out.println(" java -Xmx256M -jar LazyControl.jar server " + Parameter.port + Factory.defaultPort + " " + Parameter.allowControl + "false " + Parameter.password + "password " + Parameter.interlacedPass + "4 " + Parameter.threadSleep + "100");
 		}
 
-		// new Server(Factory.defaultPort, "",false,2).start();
+		// new Server(Factory.defaultPort, "", false, 2, 25).start();
 		// Factory.getServerFrame();
 	}
 

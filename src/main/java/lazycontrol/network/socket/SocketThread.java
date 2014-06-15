@@ -6,6 +6,7 @@ public abstract class SocketThread extends Thread {
 
 	protected Socket socket;
 	protected boolean stop = false;
+	protected int threadSleepMs;
 
 	public enum header {
 		resolution, rgbs, screenCaptureSize, mousePressed, mouseReleased, keyPressed, keyReleased;
@@ -13,9 +14,10 @@ public abstract class SocketThread extends Thread {
 
 	public static final String separator = ",";
 
-	public SocketThread(Socket socket) {
+	public SocketThread(Socket socket, int threadSleepMs) {
 		super();
 		this.socket = socket;
+		this.threadSleepMs = threadSleepMs;
 	}
 
 	public void run() {
@@ -23,7 +25,7 @@ public abstract class SocketThread extends Thread {
 			init();
 			while (!stop) {
 				execute();
-				sleep(25);
+				sleep(threadSleepMs);
 			}
 			finalize();
 		} catch (Exception e) {

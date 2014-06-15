@@ -25,8 +25,8 @@ public class SocketSender extends SocketThread {
 
 	private int width = 480;
 
-	public SocketSender(Socket socket) {
-		super(socket);
+	public SocketSender(Socket socket, int threadSleepMs) {
+		super(socket, threadSleepMs);
 		trames = new ArrayList<String>();
 	}
 

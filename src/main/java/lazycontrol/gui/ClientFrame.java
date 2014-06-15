@@ -34,7 +34,7 @@ public class ClientFrame extends JFrame {
 	private long lastResize;
 	private JProgressBar jProgressBar;
 
-	private TextField address, port;
+	private TextField address, port, threadSleepMs;
 	private PasswordField password;
 	private JButton connect, disconnect;
 	private JCheckBox takeControl;
@@ -56,7 +56,7 @@ public class ClientFrame extends JFrame {
 		connect = new JButton("Connect");
 		disconnect = new JButton("Disconnect");
 		takeControl = new JCheckBox("Take control");
-		;
+		threadSleepMs = new TextField("25");
 		disconnect.setEnabled(false);
 		controlPanel.add(connect);
 		controlPanel.add(new JLabel("Address: "));
@@ -68,6 +68,8 @@ public class ClientFrame extends JFrame {
 		controlPanel.add(connect);
 		controlPanel.add(disconnect);
 		controlPanel.add(takeControl);
+		controlPanel.add(new JLabel("Thread Sleep (ms): "));
+		controlPanel.add(threadSleepMs);
 
 		screenLabel = new ScreenLabel();
 		getRootPane().add(screenLabel, BorderLayout.CENTER);
@@ -105,7 +107,7 @@ public class ClientFrame extends JFrame {
 		connect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
 				try {
-					client = new Client(address.getText(), Integer.valueOf(port.getText()), new String(password.getPassword()));
+					client = new Client(address.getText(), Integer.valueOf(port.getText()), new String(password.getPassword()), Integer.valueOf(threadSleepMs.getText()));
 					client.start();
 					init = false;
 					connect.setEnabled(false);
