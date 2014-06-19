@@ -30,7 +30,7 @@ public class Server extends Thread {
 	public void run() {
 		try {
 			serverSocket = new ServerSocket(port);
-			System.out.println("Listening on " + port + ", allowControl: " + allowControl);
+			System.out.println("Listening on " + port + ", allowControl: " + allowControl + ", interlacedPass: " + interlacedPass + ", threadSleepMs: " + threadSleepMs);
 			while (!stop) {
 				Socket socket = serverSocket.accept();
 				System.out.println("New socket from " + socket.getInetAddress());
