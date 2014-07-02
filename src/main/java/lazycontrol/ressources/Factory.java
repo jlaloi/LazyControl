@@ -1,6 +1,8 @@
 package main.java.lazycontrol.ressources;
 
 import java.awt.Robot;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
 import java.net.Socket;
 
 import main.java.lazycontrol.gui.ClientFrame;
@@ -12,6 +14,8 @@ public class Factory {
 	public static final String appName = "Lazy Control";
 	public static final int defaultPort = 45878;
 	public static final String defaultAddress = "localhost";
+
+	public static final int bufferedImageType = BufferedImage.TYPE_USHORT_555_RGB;
 
 	private static ClientFrame serverFrame;
 	private static SocketReceiver serverSocketReceiver, clientSocketReceiver;
@@ -75,5 +79,10 @@ public class Factory {
 		serverSocketReceiver = new SocketReceiver(socket, threadSleepMs);
 		serverSocketReceiver.start();
 		return serverSocketReceiver;
+	}
+
+	public static int getBufferedImageMemory(BufferedImage image) {
+		DataBuffer buff = image.getRaster().getDataBuffer();
+		return buff.getSize() * DataBuffer.getDataTypeSize(buff.getDataType()) / 8;
 	}
 }

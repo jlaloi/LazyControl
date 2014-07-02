@@ -6,6 +6,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,14 +44,21 @@ public class ScreenCapture {
 		return Factory.getRobot().createScreenCapture(bounds);
 	}
 
-	public static BufferedImage resizeImage(BufferedImage image, int width, int height) {
-		BufferedImage resutl = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+	public static BufferedImage resizeImage(BufferedImage image, int width, int height, int imageType) {
+		BufferedImage resutl = new BufferedImage(width, height, imageType);
 		Graphics2D graphics2D = resutl.createGraphics();
 		graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		graphics2D.drawImage(image, 0, 0, width, height, null);
 		graphics2D.dispose();
 		return resutl;
+	}
+
+	public static BufferedImage toColorModel(BufferedImage src, int imageType) {
+		BufferedImage result = new BufferedImage(src.getWidth(), src.getHeight(), imageType);
+		ColorConvertOp op = new ColorConvertOp(src.getColorModel().getColorSpace(), result.getColorModel().getColorSpace(), null);
+		op.filter(src, result);
+		return result;
 	}
 
 }

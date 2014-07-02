@@ -29,7 +29,7 @@ public class ImageComparator {
 		String[] array;
 		for (String rgbs : trame.split(separatorObject)) {
 			array = rgbs.split(separatorValue);
-			if (array.length >= 3) {
+			if (array.length == 3) {
 				image.setRGB(Integer.valueOf(array[0]), Integer.valueOf(array[1]), Integer.valueOf(array[2]));
 			}
 		}

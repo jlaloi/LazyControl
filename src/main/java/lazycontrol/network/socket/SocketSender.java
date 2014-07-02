@@ -10,6 +10,7 @@ import java.util.List;
 
 import main.java.lazycontrol.misc.ImageComparator;
 import main.java.lazycontrol.misc.ScreenCapture;
+import main.java.lazycontrol.ressources.Factory;
 
 public class SocketSender extends SocketThread {
 
@@ -25,6 +26,8 @@ public class SocketSender extends SocketThread {
 
 	private int width = 480;
 
+	private int imageType = Factory.bufferedImageType;
+
 	public SocketSender(Socket socket, int threadSleepMs) {
 		super(socket, threadSleepMs);
 		trames = new ArrayList<String>();
@@ -36,12 +39,12 @@ public class SocketSender extends SocketThread {
 				// Capture
 				screenCapture = ScreenCapture.getScreenCapture();
 				if (width < screenCapture.getWidth()) {
-					screenCapture = ScreenCapture.resizeImage(screenCapture, width, screenCapture.getHeight() * width / screenCapture.getWidth());
+					screenCapture = ScreenCapture.resizeImage(screenCapture, width, screenCapture.getHeight() * width / screenCapture.getWidth(), imageType);
 				}
 
 				// Resolution change
 				if (!init) {
-					trame = header.resolution.toString() + screenCapture.getWidth() + separator + screenCapture.getHeight() + separator;
+					trame = header.resolution.toString() + imageType + separator + screenCapture.getWidth() + separator + screenCapture.getHeight() + separator;
 					trame += ScreenCapture.getScreenCaptureBound().width + separator + ScreenCapture.getScreenCaptureBound().height + separator;
 					for (Rectangle bound : ScreenCapture.getScreenBounds()) {
 						trame += bound.x + separator + bound.y + separator + bound.width + separator + bound.height + separator;
@@ -64,7 +67,7 @@ public class SocketSender extends SocketThread {
 
 				// Flush...
 				old = screenCapture;
-				trame = "";
+				trame = null;
 				screenCapture.flush();
 				screenCapture = null;
 
