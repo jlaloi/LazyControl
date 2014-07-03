@@ -56,13 +56,12 @@ public class ImageComparator {
 	public static BufferedImage insertImageChange(BufferedImage image, String trame) {
 		String[] array;
 		int x, y, rgb, count;
-		for (String rgbs : trame.split(separatorObject)) {
-			array = rgbs.split(separatorValue);
-			x = Integer.valueOf(array[0]);
-			y = Integer.valueOf(array[1]);
-			rgb = Integer.valueOf(array[2]);
-			try{
-
+		try {
+			for (String rgbs : trame.split(separatorObject)) {
+				array = rgbs.split(separatorValue);
+				x = Integer.valueOf(array[0]);
+				y = Integer.valueOf(array[1]);
+				rgb = Integer.valueOf(array[2]);
 				if (array.length == 3) {
 					image.setRGB(x, y, rgb);
 				} else if (array.length == 4) {
@@ -71,11 +70,11 @@ public class ImageComparator {
 						image.setRGB(x + i, y, rgb);
 					}
 				}
-			}catch (Exception e) {
-				// TODO: Real fix...
-				System.out.println("Desynchronization ...");
-				Factory.getServerFrame().updateCaptureResolution();
 			}
+		} catch (Exception e) {
+			// TODO: Real fix...
+			System.out.println("Desynchronization ...");
+			Factory.getServerFrame().updateCaptureResolution();
 		}
 		return image;
 	}
