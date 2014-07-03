@@ -163,7 +163,7 @@ public class ClientFrame extends JFrame {
 		screenLabel.setOriginalResolution(originalWidth, originalHeight);
 	}
 
-	private void updateCaptureResolution() {
+	public void updateCaptureResolution() {
 		Factory.getClientSocketSender().changeScreenCaptureSize(screenLabel.getWidth());
 		lastWidth = screenLabel.getWidth();
 	}
