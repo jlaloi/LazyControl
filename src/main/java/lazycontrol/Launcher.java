@@ -32,8 +32,8 @@ public class Launcher {
 			int port = Factory.defaultPort;
 			boolean allowControl = false;
 			String password = "";
-			int interlacedPass = 4;
-			int threadSleep = 100;
+			int interlacedPass = 2;
+			int threadSleep = 25;
 			for (int i = 1; i < args.length; i++) {
 				String arg = args[i];
 				if (arg.startsWith(Parameter.allowControl.toString())) {
