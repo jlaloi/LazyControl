@@ -29,7 +29,7 @@ public class ClientFrame extends JFrame {
 
 	private ScreenLabel screenLabel;
 	private int intLastSecond;
-	private int fpsCount, lastSecond, lastWidth;
+	private int fpsCount, lastSecond, lastWidth, totalLength;
 	private int originalWidth, originalHeight;
 	private long lastResize;
 	private JProgressBar jProgressBar;
@@ -137,9 +137,11 @@ public class ClientFrame extends JFrame {
 	public void setScreenCapture(ImageIcon image, int length) {
 		lastSecond = Calendar.getInstance().get(Calendar.SECOND);
 		fpsCount++;
+		totalLength+= length;
 		if (lastSecond != intLastSecond) {
-			setTitle(Factory.appName + " - " + fpsCount + " fps" + " - " + image.getIconWidth() + "x" + image.getIconHeight() + " - (" + originalWidth + "x" + originalHeight + ")");
+			setTitle(Factory.appName + " - " + fpsCount + " fps" + " - " + image.getIconWidth() + "x" + image.getIconHeight() + " - (" + originalWidth + "x" + originalHeight + ") - " + Factory.getSize(totalLength / fpsCount) +" / trames" );
 			fpsCount = 0;
+			totalLength = 0;
 			intLastSecond = lastSecond;
 		}
 
@@ -154,7 +156,7 @@ public class ClientFrame extends JFrame {
 			jProgressBar.setMaximum(length);
 		}
 		jProgressBar.setValue(length);
-		jProgressBar.setString(((int) (length * 100f / jProgressBar.getMaximum())) + "%");
+		jProgressBar.setString(((int) (length * 100f / jProgressBar.getMaximum())) + "% - " + Factory.getSize(length) + " (Max: " + Factory.getSize(jProgressBar.getMaximum()) + ")");
 	}
 
 	public void setOriginalResolution(int originalWidth, int originalHeight) {

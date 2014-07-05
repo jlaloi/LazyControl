@@ -42,7 +42,7 @@ public class SocketReceiver extends SocketThread {
 				Factory.getServerFrame().setScreenBounds(screenBounds);
 			} else if (trame.startsWith(header.rgbs.name())) {
 				ImageComparator.insertImageChange(image, trame.substring(header.rgbs.name().length()));
-				Factory.getServerFrame().setScreenCapture(new ImageIcon(image), trame.length());
+				Factory.getServerFrame().setScreenCapture(new ImageIcon(image), trame.getBytes().length);
 			} else if (trame.startsWith(header.screenCaptureSize.name())) {
 				Factory.getServerSocketSender().setWidth(Integer.valueOf(trame.substring(header.screenCaptureSize.name().length())));
 			} else if (allowControl) {

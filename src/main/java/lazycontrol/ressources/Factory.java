@@ -85,4 +85,15 @@ public class Factory {
 		DataBuffer buff = image.getRaster().getDataBuffer();
 		return buff.getSize() * DataBuffer.getDataTypeSize(buff.getDataType()) / 8;
 	}
+
+	public static String getSize(int bytes) {
+		if (bytes < 8) {
+			return bytes + " Bytes";
+		}
+		bytes = bytes / 1024;
+		if (bytes < 1024) {
+			return bytes + " Ko";
+		}
+		return (bytes / 1024) + "." + (bytes % 1024) + " Mo";
+	}
 }
