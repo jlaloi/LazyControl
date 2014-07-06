@@ -87,13 +87,13 @@ public class Factory {
 	}
 
 	public static String getSize(int bytes) {
-		if (bytes < 8) {
-			return bytes + " Bytes";
+		if (bytes < 1024) {
+			return bytes + " B";
 		}
 		bytes = bytes / 1024;
 		if (bytes < 1024) {
-			return bytes + " Ko";
+			return bytes + " KB";
 		}
-		return (bytes / 1024) + "." + (bytes % 1024) + " Mo";
+		return (bytes / 1024) + "." + (bytes % 1024) + " MB";
 	}
 }

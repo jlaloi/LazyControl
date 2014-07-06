@@ -137,9 +137,9 @@ public class ClientFrame extends JFrame {
 	public void setScreenCapture(ImageIcon image, int length) {
 		lastSecond = Calendar.getInstance().get(Calendar.SECOND);
 		fpsCount++;
-		totalLength+= length;
+		totalLength += length;
 		if (lastSecond != intLastSecond) {
-			setTitle(Factory.appName + " - " + fpsCount + " fps" + " - " + image.getIconWidth() + "x" + image.getIconHeight() + " - (" + originalWidth + "x" + originalHeight + ") - " + Factory.getSize(totalLength / fpsCount) +" / trames" );
+			setTitle(Factory.appName + " - " + fpsCount + " fps" + " - " + image.getIconWidth() + "x" + image.getIconHeight() + " - (" + originalWidth + "x" + originalHeight + ") - " + Factory.getSize(totalLength / fpsCount) + "/fps");
 			fpsCount = 0;
 			totalLength = 0;
 			intLastSecond = lastSecond;

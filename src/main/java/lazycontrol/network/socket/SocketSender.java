@@ -49,8 +49,7 @@ public class SocketSender extends SocketThread {
 					for (Rectangle bound : ScreenCapture.getScreenBounds()) {
 						trame += bound.x + separator + bound.y + separator + bound.width + separator + bound.height + separator;
 					}
-					printWritter.println(trame);
-					printWritter.flush();
+					sendTrame(trame);
 					old = null;
 					init = true;
 				}
@@ -59,9 +58,7 @@ public class SocketSender extends SocketThread {
 				for (int i = 0; i < interlacedPass; i++) {
 					trame = ImageComparator.getImageDiffTrame(screenCapture, old, i, interlacedPass);
 					if (trame.length() > 0) {
-						printWritter.print(header.rgbs.toString());
-						printWritter.println(trame);
-						printWritter.flush();
+						sendTrame(header.rgbs.toString() + trame);
 					}
 				}
 
@@ -77,8 +74,7 @@ public class SocketSender extends SocketThread {
 			synchronized (trames) {
 				if (trames.size() > 0) {
 					for (String trame : trames) {
-						printWritter.println(trame);
-						printWritter.flush();
+						sendTrame(trame);
 					}
 					trames.clear();
 				}
@@ -92,6 +88,17 @@ public class SocketSender extends SocketThread {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void sendTrame(String trame) {
+		try {
+			printWritter.println(trame);
+			printWritter.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Out error, stopping thead");
+			stopThread();
 		}
 	}
 

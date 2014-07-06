@@ -32,7 +32,7 @@ public class Launcher {
 			int port = Factory.defaultPort;
 			boolean allowControl = false;
 			String password = "";
-			int interlacedPass = 2;
+			int interlacedPass = 4;
 			int threadSleep = 25;
 			for (int i = 1; i < args.length; i++) {
 				String arg = args[i];
@@ -58,7 +58,7 @@ public class Launcher {
 			System.out.println(" java -Xmx256M -jar LazyControl.jar server " + Parameter.port + Factory.defaultPort + " " + Parameter.allowControl + "false " + Parameter.password + "password " + Parameter.interlacedPass + "4 " + Parameter.threadSleep + "100");
 		}
 
-		// new Server(Factory.defaultPort, "", false, 2, 25).start();
+		// new Server(Factory.defaultPort, "", false, 4, 25).start();
 		// Factory.getServerFrame();
 	}
 
